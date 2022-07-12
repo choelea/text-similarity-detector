@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vue Demo</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.3"></script>
+    <style>
+        .on {
+            background-color: yellow;
+        }
+    </style>
+</head>
+<body>
+ 
+    <div id="app">
+        <textarea style="width: 40%;height: 200px;" v-model="left">
+
+        </textarea>
+        <textarea style="width: 40%;height: 200px;" v-model="right">
+
+        </textarea>
+        <button v-on:click="compare">提交</button>
+
+
+        <div style="display:flex;">
+            <div style="width: 40%" v-html="leftHtml"> </div>
+            <div style="width: 40%" v-html="rightHtml"> </div>
+        </div>
+    </div>
+ 
+
+
+<script>
+    var app = new Vue({
+        el: "#app",
+        data: {
+            left: "",
+            right: "",
+            leftHtml:"",
+            rightHtml:""
+        },
+        methods:{
+            compare: function(){
+                var body = {left:this.left, right:this.right}
+                // GET /someUrl
+                this.$http.post('/api/similarity/_check', body).then(response => {
+                    leftHtml = this.left;
+                    rightHtml = this.right;
+                    var substrs = response.body;
+                    substrs.forEach(function(s){
+                        leftHtml = leftHtml.replace(s, "<span class='on'>"+s+"</span>");
+                        rightHtml = rightHtml.replace(s, "<span class='on'>"+s+"</span>");
+                    });
+                    this.leftHtml = leftHtml;
+                    this.rightHtml = rightHtml;
+                }, response => {
+                    console.log(response)
+                });
+            }
+        }
+    })
+</script>
+</body>
+</html>
