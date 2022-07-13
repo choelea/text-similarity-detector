@@ -33,7 +33,7 @@ public class LcsSimilarityChecker implements SimilarityScore<Float> {
         final List<String> leftSentences = sentenceBreaker.toSentenceList(left);
         final List<String> rightSentences = sentenceBreaker.toSentenceList(right);
 
-        float[] maxLeftScore = new float[leftSentences.size()];
+        int totalLcsLength = 0;
         String leftSentence;
         String rightSentence;
         for (int i = 0; i < leftSentences.size(); i++) {
@@ -47,15 +47,16 @@ public class LcsSimilarityChecker implements SimilarityScore<Float> {
                     maxLength = length;
                 }
             }
-            maxLeftScore[i] = maxLength / leftSentence.length();
+            totalLcsLength = totalLcsLength + maxLength;
         }
 
-        // 计算平均得分
-        float resultScore = 0;
-        for (int i = 0; i < maxLeftScore.length; i++) {
-            resultScore = resultScore + maxLeftScore[i];
+        int totalLength = 0;
+        for (int i = 0; i < leftSentences.size(); i++) {
+            totalLength += leftSentences.get(i).length();
         }
-        return resultScore/maxLeftScore.length;
+        return (float)totalLcsLength / totalLength;
+
+
     }
 
 
