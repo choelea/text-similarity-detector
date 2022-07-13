@@ -7,7 +7,8 @@ package tech.icoding.tsd;
  * @author : Joe
  * @date : 2022/7/1
  */
-public class LongestCommonSubstr implements SimilarityScore<Float> {
+public class LongestCommonSubstr implements SimilarityScore<Integer> {
+
 
     /**
      * Calculates longest common substring similarity score of two {@code CharSequence}'s passed as
@@ -15,22 +16,26 @@ public class LongestCommonSubstr implements SimilarityScore<Float> {
      *
      * @param left first character sequence
      * @param right second character sequence
-     * @return longestCommonSubStringLength / left string length
+     * @return The longest common substring length
      * @throws IllegalArgumentException
      *             if either String input {@code null}
      */
     @Override
-    public Float apply(final CharSequence left, final CharSequence right) {
+    public Integer apply(final CharSequence left, final CharSequence right) {
         // Quick return for invalid inputs
         if (left == null || right == null) {
             throw new IllegalArgumentException("Inputs must not be null");
         }
 //        return Float.intBitsToFloat(1);
-        return Float.valueOf(longestCommonSubstring(left, right).length())  / left.length();
+        return longestCommonSubstring(left, right).length();
     }
 
 
-
+    /**
+     * @param left
+     * @param right
+     * @return
+     */
     public CharSequence longestCommonSubstring(final CharSequence left, final CharSequence right) {
         int max = 0;
         int p = 0; // 最长匹配对应left中的最后一位

@@ -21,7 +21,7 @@ public class ZhSimilarityTest {
         });
 
 
-        LcbSimilarityChecker paragraphSimilarityChecker = new LcbSimilarityChecker(new DefaultSentenceBreaker());
+        LcsSimilarityChecker paragraphSimilarityChecker = new LcsSimilarityChecker(new DefaultSentenceBreaker(), 3);
 
         String left = "计算段落之间的相似度，优先进行段落的拆分，将所有的段落拆分成一个一个的句子，然后进行N*M的比较。 N代表左边句子数量，M代表右边句子数量。\n" +
                 " * 比较得到N*M的矩阵结果，针对左边每一句，取出最大分值作为汇总计算总的相似度分值。 总的相似度:（maxScore(N)/N）";

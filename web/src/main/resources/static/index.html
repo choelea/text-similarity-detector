@@ -32,6 +32,8 @@
 
 
 <script>
+    var host = '';
+    // host = "http://localhost:8080";
     var app = new Vue({
         el: "#app",
         data: {
@@ -44,13 +46,13 @@
             compare: function(){
                 var body = {left:this.left, right:this.right}
                 // GET /someUrl
-                this.$http.post('/api/similarity/_check', body).then(response => {
+                this.$http.post(host+'/api/similarity/_check', body).then(response => {
                     leftHtml = this.left;
                     rightHtml = this.right;
                     var substrs = response.body;
                     substrs.forEach(function(s){
-                        leftHtml = leftHtml.replace(s, "<span class='on'>"+s+"</span>");
-                        rightHtml = rightHtml.replace(s, "<span class='on'>"+s+"</span>");
+                        leftHtml = leftHtml.replaceAll(s, "<span class='on'>"+s+"</span>");
+                        rightHtml = rightHtml.replaceAll(s, "<span class='on'>"+s+"</span>");
                     });
                     this.leftHtml = leftHtml;
                     this.rightHtml = rightHtml;

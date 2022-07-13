@@ -9,15 +9,22 @@ import java.util.*;
  * @author : Joe
  * @date : 2022/7/1
  */
-public class LcbSimilarityChecker implements SimilarityScore<Float> {
+public class LcsSimilarityChecker implements SimilarityScore<Float> {
 
     private LongestCommonSubstr longestCommonSubstr = new LongestCommonSubstr();
     private SentenceBreaker sentenceBreaker;
-
-    public LcbSimilarityChecker(SentenceBreaker sentenceBreaker) {
+    private int minLength;
+    public LcsSimilarityChecker(SentenceBreaker sentenceBreaker, int minLength) {
         this.sentenceBreaker = sentenceBreaker;
+        this.minLength = minLength;
     }
 
+    /**
+     *
+     * @param left the first Paragraph
+     * @param right the second Paragraph
+     * @return
+     */
     @Override
     public Float apply(CharSequence left, CharSequence right) {
         if(left == null || right == null ){
@@ -31,15 +38,16 @@ public class LcbSimilarityChecker implements SimilarityScore<Float> {
         String rightSentence;
         for (int i = 0; i < leftSentences.size(); i++) {
             leftSentence = leftSentences.get(i);
-            float maxScore = 0f;
+            Integer maxLength = 0;
+
             for (int j = 0; j < rightSentences.size(); j++) {
                 rightSentence = rightSentences.get(j);
-                final Float score = longestCommonSubstr.apply(leftSentence, rightSentence);
-                if(maxScore < score.floatValue()){
-                    maxScore = score;
+                final Integer length = longestCommonSubstr.apply(leftSentence, rightSentence);
+                if(maxLength < length){
+                    maxLength = length;
                 }
             }
-            maxLeftScore[i] = maxScore;
+            maxLeftScore[i] = maxLength / leftSentence.length();
         }
 
         // 计算平均得分
@@ -67,7 +75,9 @@ public class LcbSimilarityChecker implements SimilarityScore<Float> {
         leftSentences.forEach(leftSentence -> {
             rightSentences.forEach(rightSentence -> {
                 final CharSequence charSequence = longestCommonSubstr.longestCommonSubstring(leftSentence, rightSentence);
-                hashMap.put(charSequence.hashCode(), charSequence);
+                if(charSequence.length() >= minLength) {
+                    hashMap.put(charSequence.hashCode(), charSequence);
+                }
             });
         });
         return hashMap.values();
