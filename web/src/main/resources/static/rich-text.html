@@ -30,7 +30,7 @@
 
 <script>
     var host = '';
-    // host = "http://localhost:8080";
+    host = "http://localhost:8080";
     var app = new Vue({
         el: "#app",
         data: {
@@ -43,7 +43,7 @@
             compare: function(){
                 var body = {left:this.left, right:this.right}
                 // GET /someUrl
-                this.$http.post(host+'/api/similarity/_check', body).then(response => {
+                this.$http.post(host+'/api/html/_parse', body).then(response => {
                     leftHtml = this.left;
                     rightHtml = this.right;
                     var substrs = response.body;

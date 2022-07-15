@@ -77,6 +77,8 @@ public class DefaultSentenceBreaker implements SentenceBreaker{
                 break;
                 case '，':
                 case ',':
+                case '：':
+                case ':':
                 case '、':
                 case ';':
                 case '；':
