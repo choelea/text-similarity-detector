@@ -54,7 +54,6 @@ public class DefaultSentenceBreaker implements SentenceBreaker{
                 continue;
             }
 
-            sb.append(chars.charAt(i));
             switch (chars.charAt(i))
             {
                 case '.':
@@ -65,16 +64,16 @@ public class DefaultSentenceBreaker implements SentenceBreaker{
                     }
                     break;
                 case '…':
-                {
-                    if (i < chars.length() - 1 && chars.charAt(i+1) == '…')
                     {
-                        sb.append('…');
-                        ++i;
-                        insertIntoList(sb, sentences);
-                        sb = new StringBuilder();
+                        if (i < chars.length() - 1 && chars.charAt(i+1) == '…')
+                        {
+                            sb.append('…');
+                            ++i;
+                            insertIntoList(sb, sentences);
+                            sb = new StringBuilder();
+                        }
                     }
-                }
-                break;
+                    break;
                 case '，':
                 case ',':
                 case '：':
@@ -97,6 +96,9 @@ public class DefaultSentenceBreaker implements SentenceBreaker{
                 case '\r':
                     insertIntoList(sb, sentences);
                     sb = new StringBuilder();
+                    break;
+                default:
+                    sb.append(chars.charAt(i));
                     break;
             }
         }

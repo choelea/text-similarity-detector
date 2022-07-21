@@ -33,22 +33,9 @@ public class LcsSimilarityChecker implements SimilarityScore<Float> {
         final List<String> leftSentences = sentenceBreaker.toSentenceList(left);
         final List<String> rightSentences = sentenceBreaker.toSentenceList(right);
 
-        int totalLcsLength = 0;
-        String leftSentence;
-        String rightSentence;
-        for (int i = 0; i < leftSentences.size(); i++) {
-            leftSentence = leftSentences.get(i);
-            Integer maxLength = 0;
 
-            for (int j = 0; j < rightSentences.size(); j++) {
-                rightSentence = rightSentences.get(j);
-                final Integer length = longestCommonSubstr.apply(leftSentence, rightSentence);
-                if(maxLength < length){
-                    maxLength = length;
-                }
-            }
-            totalLcsLength = totalLcsLength + maxLength;
-        }
+        final Collection<CharSequence> charSequences = longestCommonSubStr(leftSentences, rightSentences);
+        int totalLcsLength = charSequences.stream().mapToInt(CharSequence::length).sum();
 
         int totalLength = 0;
         for (int i = 0; i < leftSentences.size(); i++) {
@@ -70,9 +57,19 @@ public class LcsSimilarityChecker implements SimilarityScore<Float> {
         if(left == null || right == null ){
             throw  new IllegalArgumentException("parameters can not be null");
         }
-        HashMap<Integer, CharSequence> hashMap = new HashMap<>();
         final List<String> leftSentences = sentenceBreaker.toSentenceList(left);
         final List<String> rightSentences = sentenceBreaker.toSentenceList(right);
+        return longestCommonSubStr(leftSentences, rightSentences);
+    }
+
+    /**
+     * 返回两个句子列表N*M对比后的最长公共子串的列表。
+     * @param leftSentences
+     * @param rightSentences
+     * @return
+     */
+    private Collection<CharSequence> longestCommonSubStr(final List<String> leftSentences, final List<String> rightSentences){
+        HashMap<Integer, CharSequence> hashMap = new HashMap<>();
         leftSentences.forEach(leftSentence -> {
             rightSentences.forEach(rightSentence -> {
                 final CharSequence charSequence = longestCommonSubstr.longestCommonSubstring(leftSentence, rightSentence);
@@ -83,7 +80,6 @@ public class LcsSimilarityChecker implements SimilarityScore<Float> {
         });
         return hashMap.values();
     }
-
     /**
      * 返回两个段落句子N*M对比后的最长公共子串的列表。并根据结果列表的字符串的长度倒序排列。
      * @param left

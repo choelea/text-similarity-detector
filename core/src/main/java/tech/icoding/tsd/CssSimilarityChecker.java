@@ -3,6 +3,8 @@ package tech.icoding.tsd;
 import java.util.*;
 
 /**
+ * 公共子字符串比较，列出并比较所有的公共子字符串，而不仅仅是最长的那个。
+ * TODO 还未开发完成
  * @author : Joe
  * @date : 2022/7/1
  */

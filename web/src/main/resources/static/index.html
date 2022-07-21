@@ -19,7 +19,7 @@
         <textarea style="width: 40%;height: 200px;" v-model="right">
         </textarea>
         <button v-on:click="compare">提交</button>
-
+        <div>相似度分值:  {{score}}</div>
         <div style="display:flex;">
             <div style="width: 40%" v-html="leftHtml"> </div>
             <div style="width: 40%" v-html="rightHtml"> </div>
@@ -37,7 +37,8 @@
             left: "",
             right: "",
             leftHtml:"",
-            rightHtml:""
+            rightHtml:"",
+            score:""
         },
         methods:{
             compare: function(){
@@ -46,13 +47,14 @@
                 this.$http.post(host+'/api/similarity/_check', body).then(response => {
                     leftHtml = this.left;
                     rightHtml = this.right;
-                    var substrs = response.body;
+                    var substrs = response.body.subStrings;
                     substrs.forEach(function(s){
                         leftHtml = leftHtml.replaceAll(s, "<span class='on'>"+s+"</span>");
                         rightHtml = rightHtml.replaceAll(s, "<span class='on'>"+s+"</span>");
                     });
                     this.leftHtml = leftHtml;
                     this.rightHtml = rightHtml;
+                    this.score = response.body.score;
                 }, response => {
                     console.log(response)
                 });

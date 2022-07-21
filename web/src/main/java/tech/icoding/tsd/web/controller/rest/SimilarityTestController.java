@@ -6,6 +6,9 @@ import tech.icoding.tsd.DefaultSentenceBreaker;
 import tech.icoding.tsd.LcsSimilarityChecker;
 import tech.icoding.tsd.web.form.ContentForm;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  * @author : Joe
@@ -17,18 +20,22 @@ import tech.icoding.tsd.web.form.ContentForm;
 public class SimilarityTestController {
 
     LcsSimilarityChecker paragraphSimilarityChecker = new LcsSimilarityChecker(new DefaultSentenceBreaker(3, true), 3);
-    CssSimilarityChecker cssSimilarityChecker = new CssSimilarityChecker(new DefaultSentenceBreaker());
+//    CssSimilarityChecker cssSimilarityChecker = new CssSimilarityChecker(new DefaultSentenceBreaker());
     @PostMapping("/_check")
-    public CharSequence[] check(@RequestBody ContentForm contentForm){
-        final Float apply = paragraphSimilarityChecker.apply(contentForm.getLeft(), contentForm.getRight());
+    public Map check(@RequestBody ContentForm contentForm){
+        final Float score = paragraphSimilarityChecker.apply(contentForm.getLeft(), contentForm.getRight());
         final CharSequence[] charSequences = paragraphSimilarityChecker.sortedLongestCommonSubstr(contentForm.getLeft(), contentForm.getRight());
-        return charSequences;
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("score", score);
+        map.put("subStrings", charSequences);
+        return map;
     }
 
 
-    @PostMapping("/_checks")
-    public CharSequence[] checks(@RequestBody ContentForm contentForm){
-        final CharSequence[] charSequences = cssSimilarityChecker.sortedLongestCommonSubstr(contentForm.getLeft(), contentForm.getRight());
-        return charSequences;
-    }
+//    @PostMapping("/_checks")
+//    public CharSequence[] checks(@RequestBody ContentForm contentForm){
+//        final CharSequence[] charSequences = cssSimilarityChecker.sortedLongestCommonSubstr(contentForm.getLeft(), contentForm.getRight());
+//        return charSequences;
+//    }
 }
