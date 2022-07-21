@@ -27,9 +27,14 @@ public class SimilarityTestController {
         final Float score = paragraphSimilarityChecker.apply(contentForm.getLeft(), contentForm.getRight());
         final List<CharSequence> charSequences = paragraphSimilarityChecker.sortedLongestCommonSubstr(contentForm.getLeft(), contentForm.getRight());
 
+        //        去掉重复字符串
+        Map<Integer, CharSequence> hashMap = new HashMap<>();
+        charSequences.forEach(sequence -> {
+            hashMap.put(sequence.hashCode(), sequence);
+        });
         Map<String, Object> map = new HashMap<>();
         map.put("score", score);
-        map.put("subStrings", charSequences);
+        map.put("subStrings", hashMap.values());
         return map;
     }
 
