@@ -29,7 +29,7 @@ public class CssSimilarityChecker implements SimilarityScore<Float> {
      * @param right
      * @return
      */
-    public Collection<CharSequence> longestCommonSubStr(CharSequence left, CharSequence right){
+    public Collection<CharSequence> commonSubStrings(CharSequence left, CharSequence right){
         if(left == null || right == null ){
             throw  new IllegalArgumentException("parameters can not be null");
         }
@@ -54,8 +54,8 @@ public class CssSimilarityChecker implements SimilarityScore<Float> {
      * @param right
      * @return
      */
-    public CharSequence[] sortedLongestCommonSubstr(CharSequence left, CharSequence right){
-        final Collection<CharSequence> charSequences = longestCommonSubStr(left, right);
+    public CharSequence[] commonSubstrings(CharSequence left, CharSequence right){
+        final Collection<CharSequence> charSequences = commonSubStrings(left, right);
         final CharSequence[] css = new CharSequence[charSequences.size()];
         charSequences.toArray(css);
         Arrays.sort(css, new Comparator<CharSequence>() {

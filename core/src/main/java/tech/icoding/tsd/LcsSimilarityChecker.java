@@ -41,9 +41,8 @@ public class LcsSimilarityChecker implements SimilarityScore<Float> {
         for (int i = 0; i < leftSentences.size(); i++) {
             totalLength += leftSentences.get(i).length();
         }
-        return (float)totalLcsLength / totalLength;
-
-
+        float score = (float)totalLcsLength / totalLength;
+        return (score > 1f)? 1f : score;
     }
 
 
@@ -53,7 +52,7 @@ public class LcsSimilarityChecker implements SimilarityScore<Float> {
      * @param right
      * @return
      */
-    public Collection<CharSequence> longestCommonSubStr(CharSequence left, CharSequence right){
+    public List<CharSequence> longestCommonSubStr(CharSequence left, CharSequence right){
         if(left == null || right == null ){
             throw  new IllegalArgumentException("parameters can not be null");
         }
@@ -63,22 +62,41 @@ public class LcsSimilarityChecker implements SimilarityScore<Float> {
     }
 
     /**
-     * 返回两个句子列表N*M对比后的最长公共子串的列表。
+     * 返回两个句子列表N*M对比后的最长公共子串的列表。 列表的大小 <= leftSentences.size()。
+     * 可能存在重复的字符串，但是在用于计算分值更准确。
      * @param leftSentences
      * @param rightSentences
      * @return
      */
-    private Collection<CharSequence> longestCommonSubStr(final List<String> leftSentences, final List<String> rightSentences){
-        HashMap<Integer, CharSequence> hashMap = new HashMap<>();
-        leftSentences.forEach(leftSentence -> {
-            rightSentences.forEach(rightSentence -> {
+    private List<CharSequence> longestCommonSubStr(final List<String> leftSentences, final List<String> rightSentences){
+        List<CharSequence> list = new ArrayList<>();
+
+        String leftSentence;
+        String rightSentence;
+        for (int i = 0; i < leftSentences.size(); i++) {
+            leftSentence = leftSentences.get(i);
+            Integer maxLength = 0;
+            CharSequence longestSubStr = null;
+            for (int j = 0; j < rightSentences.size(); j++) {
+                rightSentence = rightSentences.get(j);
                 final CharSequence charSequence = longestCommonSubstr.longestCommonSubstring(leftSentence, rightSentence);
-                if(charSequence.length() >= minLength) {
-                    hashMap.put(charSequence.hashCode(), charSequence);
+                final Integer length = charSequence.length();
+                if(maxLength < length && length >= minLength){
+                    maxLength = length;
+                    longestSubStr = charSequence;
                 }
-            });
-        });
-        return hashMap.values();
+            }
+            if(longestSubStr != null){
+                list.add(longestSubStr);
+            }
+        }
+
+//        去掉重复字符串
+//        Map<Integer, CharSequence> hashMap = new HashMap<>();
+//        list.forEach(sequence -> {
+//            hashMap.put(sequence.hashCode(), sequence);
+//        });
+        return list;
     }
     /**
      * 返回两个段落句子N*M对比后的最长公共子串的列表。并根据结果列表的字符串的长度倒序排列。
@@ -86,16 +104,14 @@ public class LcsSimilarityChecker implements SimilarityScore<Float> {
      * @param right
      * @return
      */
-    public CharSequence[] sortedLongestCommonSubstr(CharSequence left, CharSequence right){
-        final Collection<CharSequence> charSequences = longestCommonSubStr(left, right);
-        final CharSequence[] css = new CharSequence[charSequences.size()];
-        charSequences.toArray(css);
-        Arrays.sort(css, new Comparator<CharSequence>() {
+    public List<CharSequence> sortedLongestCommonSubstr(CharSequence left, CharSequence right){
+        final List<CharSequence> charSequences = longestCommonSubStr(left, right);
+        Collections.sort(charSequences, new Comparator<CharSequence>() {
             @Override
             public int compare(CharSequence o1, CharSequence o2) {
                 return o2.length() - o1.length();
             }
         });
-        return css;
+        return charSequences;
     }
 }

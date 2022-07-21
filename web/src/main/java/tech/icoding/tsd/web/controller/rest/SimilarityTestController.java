@@ -7,6 +7,7 @@ import tech.icoding.tsd.LcsSimilarityChecker;
 import tech.icoding.tsd.web.form.ContentForm;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -24,7 +25,7 @@ public class SimilarityTestController {
     @PostMapping("/_check")
     public Map check(@RequestBody ContentForm contentForm){
         final Float score = paragraphSimilarityChecker.apply(contentForm.getLeft(), contentForm.getRight());
-        final CharSequence[] charSequences = paragraphSimilarityChecker.sortedLongestCommonSubstr(contentForm.getLeft(), contentForm.getRight());
+        final List<CharSequence> charSequences = paragraphSimilarityChecker.sortedLongestCommonSubstr(contentForm.getLeft(), contentForm.getRight());
 
         Map<String, Object> map = new HashMap<>();
         map.put("score", score);
